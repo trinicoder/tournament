@@ -21,6 +21,7 @@ INSERT INTO tournament VALUES ('Bruno Walton' );
 INSERT INTO tournament VALUES ("Dwayne Johnson");
 INSERT INTO tournament VALUES ('Cathy Burton');
 INSERT INTO tournament VALUES ('Diane Grant');
+INSERT INTO tournament VALUES ('Dwayne Johnson');
 INSERT INTO wins VALUES (1,2,10);
 INSERT INTO wins VALUES (1,3,20);
 INSERT INTO wins VALUES (2,3,30);
@@ -29,3 +30,9 @@ INSERT INTO matches VALUES (1,3);
 INSERT INTO matches VALUES (3,2);
 select * from tournament;
 SELECT id FROM matches WHERE pID1 = 1 and pID2= 2 or pID2 = 1 and pID1= 2;
+
+select id, playerName, num_wins
+from (SELECT winner_id, count(match_id) as num_wins 
+                    FROM wins 
+                    group by winner_id 
+                    order by num_wins)as R1  left join tournament on R1.winner_id= tournament.id;
