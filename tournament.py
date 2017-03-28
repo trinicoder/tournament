@@ -80,11 +80,17 @@ def playerStandings():
     """
     DB = connect()
     c = DB.cursor()
-    c.execute("""SELECT winner_id, count(match_id) as num_wins 
-                    FROM wins 
+    c.execute("""SELECT winner_id,tournament.playerName count(match_id) as num_wins 
+                    FROM wins join tournament
                     group by winner_id 
                     order by num_wins""")
     result= c.fetchall()
+    CREATE TABLE matches ( pID1 integer,pID2 integer, id SERIAL );  
+    c.execute("""SELECT 
+                    FROM matches join tournament
+                    group by winner_id 
+                    order by num_wins""")
+   
     for row in result:
         print row
     DB.close()
@@ -121,5 +127,12 @@ def swissPairings():
         name2: the second player's name
     """
     #get all players, sort by number of wins.create matches with the 2 adjacent players
-
+    c.execute("""SELECT id, playerName, num_wins
+                    FROM (SELECT winner_id, count(match_id) as num_wins 
+                        FROM wins 
+                        group by winner_id 
+                    )as R1  right join tournament on R1.winner_id= tournament.id order by num_wins""")
+    result= c.fetchall()
+    for row in result:
+        print row
 
